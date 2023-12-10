@@ -11,8 +11,9 @@ type WeatherLocation = {
   country: string;
 };
 
-type WeatherForecastHourly = {
+export type WeatherForecastHourly = {
   time: string;
+  temp_c: number;
   condition: {
     text: string;
     icon: string;
