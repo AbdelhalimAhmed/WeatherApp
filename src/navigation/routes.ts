@@ -1,5 +1,5 @@
 enum ROUTES {
-  WEATHER_DETAILS = 'Weather Details',
+  WEATHER_INFO = "Weather Info",
 }
 
 export default ROUTES;

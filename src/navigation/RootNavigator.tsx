@@ -2,11 +2,11 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useTheme } from '@react-navigation/native';
 
-import WeatherDetails from '../screens/WeatherDetails';
+import WeatherInfo from '../screens/WeatherInfo';
 import ROUTES from './routes';
 
 export type RootStackParamList = {
-  [ROUTES.WEATHER_DETAILS]: undefined;
+  [ROUTES.WEATHER_INFO]: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -14,10 +14,10 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 export default function RootNavigator() {
   const { colors } = useTheme();
   return (
-    <Stack.Navigator initialRouteName={ROUTES.WEATHER_DETAILS}>
+    <Stack.Navigator initialRouteName={ROUTES.WEATHER_INFO}>
       <Stack.Screen
-        name={ROUTES.WEATHER_DETAILS}
-        component={WeatherDetails}
+        name={ROUTES.WEATHER_INFO}
+        component={WeatherInfo}
         options={{
           headerTitle: 'Weather',
           headerTintColor: colors.primary,
