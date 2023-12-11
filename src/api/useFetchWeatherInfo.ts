@@ -29,7 +29,7 @@ export type ForecastDay = {
   hour?: WeatherForecastHourly[];
 };
 
-type WeatherResponse =
+export type WeatherResponse =
   | {
       location?: WeatherLocation;
       forecast?: {

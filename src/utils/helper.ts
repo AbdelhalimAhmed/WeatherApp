@@ -28,6 +28,7 @@ export function getNext5ForecastHour(forecastDay?: ForecastDay[]) {
     const forecastHourly2Days = forecastDay.flatMap(
       (forecastObj) => forecastObj?.hour ?? []
     );
+
     /** implementation 
       - get current date
       - calculate the date and time 5 hours for now
@@ -36,10 +37,11 @@ export function getNext5ForecastHour(forecastDay?: ForecastDay[]) {
      */
     if (forecastHourly2Days.length) {
       const now = new Date();
-      const fiveHoursLater = new Date(now.getTime() + 5 * 60 * 60 * 1000);
+      const priorHour = new Date(now.getTime() - 59 * 60 * 1000);
+      const fiveHoursLater = new Date(priorHour.getTime() + 5 * 60 * 60 * 1000);
       const next5Hours = forecastHourly2Days.filter((forecast) => {
         const forecastDate = new Date(forecast?.time ?? "");
-        return forecastDate >= now && forecastDate <= fiveHoursLater;
+        return forecastDate >= priorHour && forecastDate < fiveHoursLater;
       });
       return next5Hours;
     }
@@ -50,10 +52,14 @@ export function getNext5ForecastHour(forecastDay?: ForecastDay[]) {
 // formate date time to HH:MM AM/PM
 export function formateTime(date: string) {
   const dateTime = new Date(date);
+  if (!dateTime.getTime() || !date) {
+    // Here instead of throning error we could provide a third-party for bug reporting like "Sentry-Bugsnag-Instabug..etc"
+    throw new Error("Invalid date provided.");
+  }
 
   const dateFormatter = new Intl.DateTimeFormat("en-US", {
-    hour: "numeric",
-    minute: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
   });
 
   return dateFormatter.format(dateTime);

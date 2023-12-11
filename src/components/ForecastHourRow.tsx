@@ -18,15 +18,27 @@ const ForecastHourRow: React.FC<ForecastHourRowProps> = ({
 }) => {
   return (
     <View style={styles.row}>
-      <View style={styles.textBox}>
+      {/* TIME  */}
+      <View style={styles.box}>
         <StyledText
           weight='bold'
-          transform='capitalize'>
+        >
           {isNow ? "Now" : formateTime(weather.time)}
         </StyledText>
       </View>
+      {/* TEMPERATURE */}
+      <StyledText
+        size='s'
+        color='primary'
+        weight='bold'
+        style={styles.conditionText}
+      >
+        {weather.temp_c.toFixed(0)}{"°C"}
+      </StyledText>
+      {/* CONDITION ICON */}
       <Image source={{ uri: getImageURL(weather.condition.icon) }} style={styles.conditionIcon} />
-      <View style={styles.textBox}>
+      {/* CONDITION TEXT */}
+      <View style={styles.box}>
         <StyledText
           size='s'
           color='primary'
@@ -47,14 +59,15 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
     paddingVertical: SPACING.m,
     gap: SPACING.l,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: COLORS.primary,
   },
-  textBox: {
-    flex: 2,
-    justifyContent: 'center'
+  box: {
+    flex: 1,
+    justifyContent: 'center',
   },
   conditionText: {
     textTransform: 'capitalize',

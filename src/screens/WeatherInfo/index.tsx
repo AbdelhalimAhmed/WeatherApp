@@ -13,7 +13,7 @@ import { ForecastHourRow, StyledText } from '../../components';
 
 type WeatherInfoProps = NativeStackScreenProps<RootStackParamList, ROUTES.WEATHER_INFO>;
 
-// export it only for test purpose
+// Render ForeCastHourlyTable as component and we can export it to be reusable component if needed
 export function ForecastHourlyTable({ forecastHourly }: { forecastHourly: WeatherForecastHourly[] }) {
   const renderForecastRow = (forecastHourly: WeatherForecastHourly, index: number) => {
     return <ForecastHourRow key={forecastHourly.time} weather={forecastHourly} isNow={index === 0} />
@@ -26,13 +26,19 @@ export function ForecastHourlyTable({ forecastHourly }: { forecastHourly: Weathe
   )
 }
 
+// Render initial message for hint user to start searching 
+const HintUserToStartSearching = () => <StyledText>Search by city name to get weather info</StyledText>
+
+// Render no data available text
+const NoDataAvailable = () => <StyledText>No data available</StyledText>
+
 function WeatherInfo() {
   const { setOptions } = useNavigation<WeatherInfoProps['navigation']>();
   const [cityName, setCityName] = useState("");
   const { isLoading, error, data } =
     useFetchWeatherInfo(cityName);
 
-  //HINT: Depending of UX decision! either trigger api when user typing city or when click search button on keyboard
+  //HINT: Depending of UX's decision! either trigger api when user typing city or when click search button on keyboard
   // used debounce here as a precaution for potential use of a search request API,
   // with the aim of minimizing the frequency of API calls.
   // const handleSearchWeather = debounce((city: string) => {
@@ -67,18 +73,21 @@ function WeatherInfo() {
   return (
     <View style={styles.container}>
       {!data?.location.country ?
-        <StyledText>Search by city name to get weather info</StyledText>
+        <HintUserToStartSearching />
         :
-        <View style={styles.card}>
-          {/* CARD HEADER */}
-          <View style={styles.cardHeader}>
-            <Image source={{ uri: getImageURL(data.forecastHourlyDay[0].condition.icon) }} style={styles.weatherImage} />
-            <StyledText size='l' weight='bold' color='primary'>{data.forecastHourlyDay[0].temp_c} {"°C"}</StyledText>
-            <StyledText size='s' weight='bold' >{data.location.name}, {data.location.country}</StyledText>
+        data.forecastHourlyDay[0] ? (
+          <View style={styles.card}>
+            {/* CARD HEADER */}
+            <View style={styles.cardHeader}>
+              <Image source={{ uri: getImageURL(data.forecastHourlyDay[0].condition.icon) }} style={styles.weatherImage} />
+              <StyledText size='l' weight='bold' color='primary'>{data.forecastHourlyDay[0].temp_c} {"°C"}</StyledText>
+              <StyledText size='s' weight='bold' >{data.location.name}, {data.location.country}</StyledText>
+            </View>
+            {/* ForecastHourly TABLE */}
+            <ForecastHourlyTable forecastHourly={data.forecastHourlyDay} />
           </View>
-          {/* ForecastHourly TABLE */}
-          <ForecastHourlyTable forecastHourly={data.forecastHourlyDay} />
-        </View>
+        ) :
+          <NoDataAvailable />
       }
     </View>
   );
