@@ -24,7 +24,7 @@ npx expo start
 1. Set up React-Navigation to manage navigation.
 2. Created a Search input component.
 3. Developed a Weather Info screen.
-4. Incorporated react-query for handling API requests due to its current popularity and ease of use. For more details, refer to the documentation: React Query Overview. Note: There might be a warning when running 'yarn jest' related to 'react-query'. This is likely due to the absence of mocking, and it should be straightforward to resolve by adopting this package.
+4. Incorporated react-query for handling API requests due to its current popularity and ease of use. For more details, refer to the documentation: [React Query Overview](https://tanstack.com/query/latest/docs/react/overview). Note: There might be a warning when running 'yarn jest' related to 'react-query'. This is likely due to the absence of mocking, and it should be straightforward to resolve by adopting this package.
 5. Implemented unit and snapshot testing for enhanced code reliability.
 
 # Folder Structure
