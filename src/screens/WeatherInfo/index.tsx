@@ -1,5 +1,15 @@
 import React, { useLayoutEffect, useState } from 'react';
-import { Text, View, ActivityIndicator, Image, ScrollView, NativeSyntheticEvent, TextInputFocusEventData } from 'react-native';
+import {
+  Text,
+  View,
+  ActivityIndicator,
+  Image,
+  ScrollView,
+  NativeSyntheticEvent,
+  TextInput,
+  TextInputSubmitEditingEventData,
+  Platform
+} from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 
@@ -11,6 +21,8 @@ import useFetchWeatherInfo, { WeatherForecastHourly } from '../../api/useFetchWe
 import styles from './styles';
 import { ForecastHourRow, StyledText } from '../../components';
 
+const PLACEHOLDER = "Search by city here"
+
 type WeatherInfoProps = NativeStackScreenProps<RootStackParamList, ROUTES.WEATHER_INFO>;
 
 // Render ForeCastHourlyTable as component and we can export it to be reusable component if needed
@@ -20,7 +32,7 @@ export function ForecastHourlyTable({ forecastHourly }: { forecastHourly: Weathe
   }
 
   return (
-    <ScrollView style={styles.table}>
+    <ScrollView style={styles.table} contentInsetAdjustmentBehavior={'automatic'}>
       {forecastHourly.map(renderForecastRow)}
     </ScrollView>
   )
@@ -45,7 +57,7 @@ function WeatherInfo() {
   //   setCityName(city)
   // }, 600);
 
-  const handleSearchWeather = (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
+  const handleSearchWeather = (e: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => {
     const cityInput = e.nativeEvent.text.trim()
     if (Boolean(cityInput)) {
       setCityName(cityInput)
@@ -53,13 +65,17 @@ function WeatherInfo() {
   }
 
   useLayoutEffect(() => {
+    // Based on this open issue https://github.com/react-navigation/react-navigation/issues/11627, the search component doesn't render properly using
+    // `headerSearchBarOptions` by react-navigation in android, my workaround is by putting a text input in headerRight for android only 
     setOptions({
+      headerRight: () => Platform.OS === 'android' && <TextInput placeholder={PLACEHOLDER} onSubmitEditing={handleSearchWeather} />,
       headerSearchBarOptions: {
         //HINT: Depending of UX decision! either trigger api when user typing city or when click search button on keyboard
         // onChangeText: e => handleSearchWeather(e.nativeEvent.text),
-        onSearchButtonPress: handleSearchWeather
+        onSearchButtonPress: handleSearchWeather,
+        placeholder: PLACEHOLDER,
       },
-    });
+    })
   }, [handleSearchWeather, setOptions]);
 
   if (isLoading || error) {
@@ -69,6 +85,7 @@ function WeatherInfo() {
       </View>
     );
   }
+
 
   return (
     <View style={styles.container}>
